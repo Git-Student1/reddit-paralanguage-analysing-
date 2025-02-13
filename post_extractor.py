@@ -21,6 +21,7 @@ class PostExtractor:
         if (not post_url):
             print("Entered empty string.")
             quit()
+        
 
         # Definself.reddite the subreddit and post you want to pull comments from
         #post_url = "https://www.reddit.com/r/democrats/comments/1i7tbbz/please_do_not_let_conservatives_cover_for_elon/"
