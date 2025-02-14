@@ -26,14 +26,15 @@ class PostExtractor:
         # Definself.reddite the subreddit and post you want to pull comments from
         #post_url = "https://www.reddit.com/r/democrats/comments/1i7tbbz/please_do_not_let_conservatives_cover_for_elon/"
         post = self.reddit.submission(url=post_url)
-        post.comments.replace_more(limit=None)  # This ensures you load all comments, including 'MoreComments' objects
+        
 
         file_path = os.path.join(self.folder_path, f'{post.fullname}.csv')
-
+        
         if (f'{post.fullname}.csv' in os.listdir(self.folder_path)):
             print(f'Already extracted: {post.fullname}.csv')
-            return None
-
+            return None 
+        post.comments.replace_more(limit=None)  # This ensures you load all comments, including 'MoreComments' objects
+        
         # Prepare columns for csv
         data = {
             'userName': [],
