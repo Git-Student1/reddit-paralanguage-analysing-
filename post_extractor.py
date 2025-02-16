@@ -41,7 +41,7 @@ class PostExtractor:
             'userKarma': [],
             'commentContent': [],
             'commentEmojis': [],
-            'sentimentScore': [],
+            'sentimentScore': []
         }
 
         for comment in post.comments.list():
@@ -76,6 +76,7 @@ class PostExtractor:
                 else:
                     print("Comment by: [deleted]")
                     print("User karma: N/A (deleted user)\n")
+                    pass
 
 
         # Create Pandas DataFrame and save csv
