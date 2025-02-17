@@ -15,7 +15,7 @@ masterFile = MasterFile()
 masterFile.update_master_file(postsToExtract)
 
 emojiAnalysis = EmojiAnalysis(masterFile)
-emojiAnalysis.extract_emoji_from_master()
+emojiAnalysis.extract_emojis_to_master_and_post_file()
 
 vaderAnalysis = VaderAnalysis(masterFile)
 vaderAnalysis.extract_mean_sentiment_score()

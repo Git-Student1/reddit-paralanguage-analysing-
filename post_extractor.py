@@ -17,7 +17,11 @@ class PostExtractor:
         self.csv_folder = 'data'
         self.folder_path = os.path.join(self.file_dir, self.csv_folder)
 
+    
     def extractPost(self, post_url):
+        """
+        Extracts comments from posts url and puts them into a file.
+        """
         if (not post_url):
             print("Entered empty string.")
             quit()
