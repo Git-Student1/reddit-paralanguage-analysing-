@@ -1,44 +1,70 @@
+from datetime import datetime
 import praw
 from dotenv import load_dotenv
 import os
 import pandas as pd
+
+from master_file import MasterFile
 load_dotenv()  
 
 class PostExtractor:
-    def __init__(self):
+    def __init__(self, folder_path):
         # Initialize PRAW with your credentials
         self.reddit = praw.Reddit(
         client_id= os.getenv("CLIENT_ID"), 
         client_secret=os.getenv("CLIENT_SECRET"), 
         user_agent=os.getenv("USER_AGENT"))
-
-        # Get Path to data folder
-        self.file_dir = os.path.dirname(os.path.abspath(__file__))
-        self.csv_folder = 'data'
-        self.folder_path = os.path.join(self.file_dir, self.csv_folder)
+        self.folder_path = folder_path
 
     
-    def extractPost(self, post_url):
+    def extract_posts(self, post_urls:list[str], masterfile:MasterFile):
+        posts = [self.__extract_post_and_write_thread_file(post_to_extract) for post_to_extract in post_urls]
+        self.__update_master_file(posts, masterfile)
+    
+
+
+    def __load_posts(self, post_url)-> praw.reddit.Submission:
         """
         Extracts comments from posts url and puts them into a file.
         """
         if (not post_url):
             print("Entered empty string.")
             quit()
-        
-
         # Definself.reddite the subreddit and post you want to pull comments from
         #post_url = "https://www.reddit.com/r/democrats/comments/1i7tbbz/please_do_not_let_conservatives_cover_for_elon/"
         post = self.reddit.submission(url=post_url)
         
-
-        file_path = os.path.join(self.folder_path, f'{post.fullname}.csv')
         
+        post.comments.replace_more(limit=None)  # This ensures you load all comments, including 'MoreComments' objects
+        return post
+
+    def __extract_post_and_write_thread_file(self, post_url):
+        post = self.__load_posts(post_url)
+        self.__write_thread_file(post)
+        return post
+        
+    def __update_master_file(self, posts: list[praw.reddit.Submission], masterfile:MasterFile):
+        for post in posts:
+            if post != None and not masterfile.contains_post_entry(post.fullname):
+                masterfile.df.loc[masterfile.df.shape[0]] = [
+                    post.fullname,
+                    datetime.today().strftime('%d-%m-%Y %H:%M:%S'),
+                    post.title,
+                    [],
+                    ""
+                ]
+        masterfile.update_master_file()
+
+
+
+    
+    def __write_thread_file(self, post: praw.reddit.Submission):
+        # dont write to file if file for it already exist
         if (f'{post.fullname}.csv' in os.listdir(self.folder_path)):
             print(f'Already extracted: {post.fullname}.csv')
-            return None 
-        post.comments.replace_more(limit=None)  # This ensures you load all comments, including 'MoreComments' objects
+            return
         
+        file_path = os.path.join(self.folder_path, f'{post.fullname}.csv')
         # Prepare columns for csv
         data = {
             'userName': [],
@@ -47,6 +73,7 @@ class PostExtractor:
             'commentEmojis': [],
             'sentimentScore': []
         }
+        
 
         for comment in post.comments.list():
             if isinstance(comment, praw.models.Comment):
@@ -80,11 +107,11 @@ class PostExtractor:
                 else:
                     print("Comment by: [deleted]")
                     print("User karma: N/A (deleted user)\n")
-                    pass
+                    
 
 
         # Create Pandas DataFrame and save csv
         df = pd.DataFrame(data=data)
         df.to_csv(file_path, index=False)
 
-        return post
+        
