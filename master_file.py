@@ -1,7 +1,7 @@
 import os
 import pandas as pd
 from post_extractor import PostExtractor
-
+from datetime import datetime
 
 class MasterFile:
     def __init__(self):
@@ -15,7 +15,7 @@ class MasterFile:
         if os.path.exists(self.master_file_path):
             self.df = pd.read_csv(self.master_file_path)
         else:
-            self.df = pd.DataFrame(columns = ["postFullname","postTitle","postEmojis","sentimentScore"])
+            self.df = pd.DataFrame(columns = ["postFullname","dateRetrieved", "postTitle","postEmojis","sentimentScore"])
             # TODO: remove print statement
             print("no masterfile exsists")
     
@@ -33,6 +33,7 @@ class MasterFile:
             if (post != None):
                 df.loc[df.shape[0]] = [
                     post.fullname,
+                    datetime.today().strftime('%d-%m-%Y %H:%M:%S'),
                     post.title,
                     [],
                     ""

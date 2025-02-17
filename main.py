@@ -1,14 +1,9 @@
-import praw
-import emoji_analysis
-from dotenv import load_dotenv
-import os
-from post_extractor import PostExtractor
 from master_file import MasterFile
 from emoji_analysis import EmojiAnalysis
 from vader_analysis import VaderAnalysis
 
 postsToExtract = [
-    "https://www.reddit.com/r/PokemonScarletViolet/comments/1ibivcl/anyone_else_think_the_loyal_three_are_super_ugly/"
+    "https://www.reddit.com/r/Republican/comments/1i7f49t/dear_anyone_still_using_reductio_ad_hitlerum_as_a/"
 ]
 
 masterFile = MasterFile()
