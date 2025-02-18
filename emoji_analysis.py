@@ -33,7 +33,7 @@ class EmojiAnalysis:
         master_df['postEmojis'] = master_df['postFullname'].apply(lambda full_name: emoji_dict[full_name])
         master_df.to_csv(self.master_file_path, index=False)
 
-    def visualize_emoji_use(self, emojis:list[list], fullname:str):
+    def __visualize_emoji_use(self, emojis:list[list], fullname:str):
         """
         create visualisation of the emoji usage
         """
@@ -66,25 +66,25 @@ class EmojiAnalysis:
         file_path = os.path.join(folder_path, f'{fullname}.csv')
 
         df = pd.read_csv(file_path)
-        df['commentEmojis'] = df['commentContent'].apply(lambda content: self.extract_emojis(content))
+        df['commentEmojis'] = df['commentContent'].apply(lambda content: self.__extract_emojis(content))
         df.to_csv(file_path, index=False)
        
-        self.visualize_emoji_use(df['commentEmojis'].tolist(), fullname=fullname)
+        self.__visualize_emoji_use(df['commentEmojis'].tolist(), fullname=fullname)
         
         return df['commentEmojis'].to_list()
     
 
-    def extract_emojis(self, text):
+    def __extract_emojis(self, text):
         # This function uses the emoji library to extract emojis from the given text.
         return [char for char in text if emoji.is_emoji(char)]
 
 
 
-    def print_emojis(self, text):
+    def __print_emojis(self, text):
         # Example text or thread (you can replace this with the thread content)
 
         # Extract emojis from the text
-        emojis = self.extract_emojis(text=text)
+        emojis = self.__extract_emojis(text=text)
 
         # Read out the emojis
         if emojis:

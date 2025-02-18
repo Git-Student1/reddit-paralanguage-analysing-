@@ -23,6 +23,11 @@ class PostExtractor:
     
 
 
+    def __extract_post_and_write_thread_file(self, post_url):
+        post = self.__load_posts(post_url)
+        self.__write_thread_file(post)
+        return post
+    
     def __load_posts(self, post_url)-> praw.reddit.Submission:
         """
         Extracts comments from posts url and puts them into a file.
@@ -32,30 +37,9 @@ class PostExtractor:
             quit()
         # Definself.reddite the subreddit and post you want to pull comments from
         #post_url = "https://www.reddit.com/r/democrats/comments/1i7tbbz/please_do_not_let_conservatives_cover_for_elon/"
-        post = self.reddit.submission(url=post_url)
-        
-        
+        post = self.reddit.submission(url=post_url)   
         post.comments.replace_more(limit=None)  # This ensures you load all comments, including 'MoreComments' objects
         return post
-
-    def __extract_post_and_write_thread_file(self, post_url):
-        post = self.__load_posts(post_url)
-        self.__write_thread_file(post)
-        return post
-        
-    def __update_master_file(self, posts: list[praw.reddit.Submission], masterfile:MasterFile):
-        for post in posts:
-            if post != None and not masterfile.contains_post_entry(post.fullname):
-                masterfile.df.loc[masterfile.df.shape[0]] = [
-                    post.fullname,
-                    datetime.today().strftime('%d-%m-%Y %H:%M:%S'),
-                    post.title,
-                    [],
-                    ""
-                ]
-        masterfile.update_master_file()
-
-
 
     
     def __write_thread_file(self, post: praw.reddit.Submission):
@@ -74,7 +58,6 @@ class PostExtractor:
             'sentimentScore': []
         }
         
-
         for comment in post.comments.list():
             if isinstance(comment, praw.models.Comment):
                 # Ensure the comment author exists (i.e. they are not a deleted account)
@@ -108,10 +91,22 @@ class PostExtractor:
                     print("Comment by: [deleted]")
                     print("User karma: N/A (deleted user)\n")
                     
-
-
         # Create Pandas DataFrame and save csv
         df = pd.DataFrame(data=data)
         df.to_csv(file_path, index=False)
 
-        
+    def __update_master_file(self, posts: list[praw.reddit.Submission], masterfile:MasterFile):
+        """
+        updates master-df  and  master-file
+        """
+        for post in posts:
+            if post != None and not masterfile.contains_post_entry(post.fullname):
+                masterfile.df.loc[masterfile.df.shape[0]] = [
+                    post.fullname,
+                    datetime.today().strftime('%d-%m-%Y %H:%M:%S'),
+                    post.title,
+                    [],
+                    ""
+                ]
+        masterfile.update_master_file()
+    

@@ -1,5 +1,6 @@
-data/
+data
 venv
+venv2
 .env
 PARA/
 __pycache__/
