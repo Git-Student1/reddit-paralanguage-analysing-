@@ -1,4 +1,5 @@
 from datetime import datetime
+import sys
 import praw
 from dotenv import load_dotenv
 import os
@@ -58,22 +59,26 @@ class PostExtractor:
             'sentimentScore': []
         }
         
-        for comment in post.comments.list():
+        total_comments = len(post.comments.list())
+
+        for i, comment in enumerate(post.comments.list(), start=1):
             if isinstance(comment, praw.models.Comment):
+                sys.stdout.write(f"\rProcessing comment {i}/{total_comments} ({(i/total_comments)*100:.2f}%) ")
+                sys.stdout.flush()
                 # Ensure the comment author exists (i.e. they are not a deleted account)
                 if comment.author:
                     # Fetch the user's profile and get their karma
-                    user = self.reddit.redditor(comment.author.name)
+                    #user = self.reddit.redditor(comment.author.name)
                     
                     if (comment.author.name):
                         data["userName"].append(comment.author.name)
                     else:
                         data["userName"].append("")
 
-                    if hasattr(user, 'link_karma'): 
-                        data["userKarma"].append(user.link_karma + user.comment_karma)
-                    else:
-                        data["userKarma"].append("")
+                    #if hasattr(comment.author, 'link_karma'): 
+                    #    data["userKarma"].append(comment.author.link_karma + comment.author.comment_karma)
+                    #else:
+                    data["userKarma"].append("")
                     
                     if (comment.body):
                         data["commentContent"].append(comment.body)
@@ -84,12 +89,13 @@ class PostExtractor:
                     data["commentEmojis"].append([])
             
                     # Extract Emojis?
-                    print(f"Comment by: {comment.author.name}")
-                    if hasattr(user, 'link_karma'): print(f"User karma: {user.link_karma + user.comment_karma}")  # Total karma (link + comment karma)
-                    print(f"Comment content: {comment.body}")
-                else:
-                    print("Comment by: [deleted]")
-                    print("User karma: N/A (deleted user)\n")
+                    #print(f"Comment by: {comment.author.name}")
+                    #if hasattr(comment.author, 'link_karma'): print(f"User karma: {comment.author.link_karma + comment.author.comment_karma}")  # Total karma (link + comment karma)
+                    #print(f"Comment content: {comment.body}")
+                #else:
+                #    print("Comment by: [deleted]")
+                #    print("User karma: N/A (deleted user)\n")
+
                     
         # Create Pandas DataFrame and save csv
         df = pd.DataFrame(data=data)
