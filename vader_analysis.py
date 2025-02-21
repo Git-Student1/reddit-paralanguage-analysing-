@@ -8,8 +8,11 @@ from nltk.tokenize import WhitespaceTokenizer
 from nltk.corpus import stopwords
 import pandas as pd
 
+from master_file import MasterFile
+
+
 class VaderAnalysis:
-    def __init__(self, master_file):
+    def __init__(self, master_file:MasterFile):
         self.analyzer = SentimentIntensityAnalyzer()
         self.master_df: pd.DataFrame = master_file.df
         self.master_file_path = master_file.master_file_path
@@ -42,24 +45,25 @@ class VaderAnalysis:
         return {'sentimentScore': df['sentimentScore'].mean()}
     
     def get_tokenized_text(self, text):
-        print("--------------------------")
-        print(text)
-        print(self.analyzer.polarity_scores(text))
-        print("\n")
+        
+        #print("--------------------------")
+        #print(text)
+        #print(self.analyzer.polarity_scores(text))
+        #print("\n")
         tokenizer = WhitespaceTokenizer()
         tokens = tokenizer.tokenize(text)
 
 
         stop_words = set(stopwords.words('english'))
         filtered_tokens = [word.lower().strip(".?!,") for word in tokens if word.lower().strip(".?!,") not in stop_words]
-        print(filtered_tokens)
-        print("\n")
+        #print(filtered_tokens)
+        #print("\n")
 
         sentence = " ".join(filtered_tokens)
-        print(sentence)
-        print("\n")
+        #print(sentence)
+        #print("\n")
 
 
-        print(self.analyzer.polarity_scores(sentence))
-        print("\n")
+        #print(self.analyzer.polarity_scores(sentence))
+        #print("\n")
         return sentence

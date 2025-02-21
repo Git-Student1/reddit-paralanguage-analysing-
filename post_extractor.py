@@ -1,4 +1,5 @@
 from datetime import datetime
+import logging
 import sys
 import praw
 from dotenv import load_dotenv
@@ -19,13 +20,16 @@ class PostExtractor:
 
     
     def extract_posts(self, post_urls:list[str], masterfile:MasterFile):
+        print("--- start post extraction ---")
         posts = [self.__extract_post_and_write_thread_file(post_to_extract) for post_to_extract in post_urls]
         self.__update_master_file(posts, masterfile)
     
 
 
     def __extract_post_and_write_thread_file(self, post_url):
+        print("start loading posts")
         post = self.__load_posts(post_url)
+        print("end loading posts")
         self.__write_thread_file(post)
         return post
     

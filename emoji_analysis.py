@@ -21,6 +21,7 @@ class EmojiAnalysis:
         """
         adds emojis to the MasterFile dataframe(df) and converts new df to masterfile, efectively updating the masterfile
         """
+        print("--- start emoji analysis ---")
         # TODO: letz the masterfile take care of the infos, given the list of comments, return the emojis in it
         master_df = self.master_df
         post_fullnames = master_df['postFullname'].to_list()
@@ -45,10 +46,10 @@ class EmojiAnalysis:
         
         flattened_emoji_list = [f"{emoji.demojize(the_emoji)} {the_emoji}" for the_emoji in flattened_emoji_list]
         ax = pd.Series(flattened_emoji_list).value_counts().plot(kind='barh', )
-        
+        ax.bar_label(ax.containers[0])
         plt.tight_layout()
         plt.savefig(f'data/{fullname}.png')
-        plt.show()
+        #plt.show()
 
          
     def flatten_emoji_list(self, emoji_list: list[list]):

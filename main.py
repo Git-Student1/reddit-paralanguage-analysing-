@@ -6,7 +6,8 @@ from vader_analysis import VaderAnalysis
 from para_analysis import ParaAnalysis
 
 postsToExtract = [
-    "https://www.reddit.com/r/Piracy/comments/1itb0il/ublock_was_turned_off_i_guess_its_time_to_move/"
+    "https://www.reddit.com/r/Republican/comments/1i7f49t/dear_anyone_still_using_reductio_ad_hitlerum_as_a/"
+    #"https://www.reddit.com/r/Piracy/comments/1itb0il/ublock_was_turned_off_i_guess_its_time_to_move/"
 ]
 # Get Path to data folder
 file_dir = os.path.dirname(os.path.abspath(__file__))
