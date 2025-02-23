@@ -2,6 +2,7 @@ import os
 import emoji
 from matplotlib import font_manager
 import matplotlib
+from matplotlib.ticker import MultipleLocator
 import pandas as pd
 import matplotlib.pyplot as plt
 from master_file import MasterFile
@@ -46,7 +47,9 @@ class EmojiAnalysis:
         
         flattened_emoji_list = [f"{emoji.demojize(the_emoji)} {the_emoji}" for the_emoji in flattened_emoji_list]
         ax = pd.Series(flattened_emoji_list).value_counts().plot(kind='barh', )
-        ax.bar_label(ax.containers[0])
+        ax.bar_label(ax.containers[0]) # adds count number to each bar in the graphic
+        ax.set_title( f"Emoji usage for thread {fullname}") 
+        ax.xaxis.set_major_locator(MultipleLocator(1)) # sets min. spacing to one, as the count of an emoji is always an integer
         plt.tight_layout()
         plt.savefig(f'data/{fullname}.png')
         #plt.show()

@@ -2,6 +2,7 @@ import os
 import sys
 
 from matplotlib import pyplot as plt
+from matplotlib.ticker import MultipleLocator
 import pandas as pd
 from master_file import MasterFile
 from para_paralanguage_classifier import para_output
@@ -69,15 +70,18 @@ class ParaAnalysis:
 
         # Convert the list of dictionaries to a DataFrame
         df_para_analysis = pd.DataFrame(output)
+
+        # Create graphic for paralanguage use analysis
         df_para_analysis_compressed =  df_para_analysis.drop(["commentContent"], axis=1,).agg(['sum'])
         df_para_analysis_compressed.info()
         print(df_para_analysis_compressed.T.columns)
         ax = df_para_analysis_compressed.T.plot.barh()
-        ax.bar_label(ax.containers[0])
-        
+        ax.bar_label(ax.containers[0]) # adds count number to each bar in the graphic
+        ax.yaxis.set_major_locator(MultipleLocator(1)) # sets min. spacing to one, as the count of a paralanguage occuring is always an integer
+        ax.set_title( f"Paralanguage usage for thread {fullname}")
         plt.tight_layout()
         plt.savefig(file_path_para_image)
-        plt.show()
+
 
         df_para_analysis.to_csv(file_path_para_df, index=False)
 
