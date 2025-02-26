@@ -6,14 +6,14 @@ from master_file import MasterFile
 import pandas as pd
 
 # post groups that wil lbe compared
-print(f"WARNING: If one group has a 0 for every para language aspect check if the posts in {__file__} are seperated by a semicolon")
+print(f"WARNING: If one group has a 0 for every para language aspect check if the post names in {__file__} are seperated by a semicolon")
 post_group1 = [ 
  "t3_1i7f49t",
  "t3_1iwzs71"#random one
 ]
 
 post_group2 =[
-"t3_1itb0il"
+#"t3_1itb0il"
 ]
 #TODO: remove code dublication with main.py
 

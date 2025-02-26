@@ -43,12 +43,11 @@ class EmojiAnalysis:
         # Get the list of all available fonts
         #available_fonts = fm.findSystemFonts(fontpaths=None, fontext='ttf')
         plt.figure(dpi=240)
-
         flattened_emoji_list = self.__flatten_emoji_list(emojis)
         if(len(flattened_emoji_list)!= 0 ):
             flattened_emoji_list = self.prossess_emojis_for_display(flattened_emoji_list)
             ax = pd.Series(flattened_emoji_list).value_counts().plot(kind='barh', )
-            ax.bar_label(ax.containers[0]) # adds count number to each bar in the graphic
+            ax.bar_label(ax.containers[0]) # type: ignore # adds count number to each bar in the graphic
             ax.xaxis.set_major_locator(MultipleLocator(1)) # sets min. spacing to one, as the count of an emoji is always an integer
         else:
             fig, ax = plt.subplots()
