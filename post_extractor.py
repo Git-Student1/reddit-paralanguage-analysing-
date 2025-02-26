@@ -111,12 +111,13 @@ class PostExtractor:
         """
         for post in posts:
             if post != None and not masterfile.contains_post_entry(post.fullname):
-                masterfile.df.loc[masterfile.df.shape[0]] = [
-                    post.fullname,
-                    datetime.today().strftime('%d-%m-%Y %H:%M:%S'),
-                    post.title,
-                    [],
-                    ""
-                ]
+                new_row = {masterfile.post_full_name_cn: post.fullname,
+                           masterfile.dateRetrieved_cn: datetime.today().strftime('%d-%m-%Y %H:%M:%S'),
+                           masterfile.postTitle_cn : post.title,
+                           masterfile.postEmojis_cn: [],
+                           masterfile.sentimentScore_cn:""}
+                
+                new_row_df = pd.DataFrame([new_row])
+                masterfile.df = pd.concat([masterfile.df, new_row_df], ignore_index=True)
         masterfile.update_master_file()
     

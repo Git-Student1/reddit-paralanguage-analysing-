@@ -30,8 +30,8 @@ class EmojiAnalysis:
         # analyze each posts emojis, then put them as a flattened list in the master file
         emoji_dict = {}
         for full_name in post_fullnames:
-            emoji_list = self.extract_emojis_from_posts(full_name)
-            emoji_dict[full_name] = self.flatten_emoji_list(emoji_list)
+            emoji_list = self.__extract_emojis_from_posts(full_name)
+            emoji_dict[full_name] = self.__flatten_emoji_list(emoji_list)
         master_df['postEmojis'] = master_df['postFullname'].apply(lambda full_name: emoji_dict[full_name])
         master_df.to_csv(self.master_file_path, index=False)
 
@@ -43,22 +43,26 @@ class EmojiAnalysis:
         #available_fonts = fm.findSystemFonts(fontpaths=None, fontext='ttf')
         plt.figure(dpi=240)
 
-        flattened_emoji_list = self.flatten_emoji_list(emojis)
-        
-        flattened_emoji_list = [f"{emoji.demojize(the_emoji)} {the_emoji}" for the_emoji in flattened_emoji_list]
-        ax = pd.Series(flattened_emoji_list).value_counts().plot(kind='barh', )
-        ax.bar_label(ax.containers[0]) # adds count number to each bar in the graphic
+        flattened_emoji_list = self.__flatten_emoji_list(emojis)
+        if(len(flattened_emoji_list)!= 0 ):
+            flattened_emoji_list = [f"{emoji.demojize(the_emoji)} {the_emoji}" for the_emoji in flattened_emoji_list]
+            ax = pd.Series(flattened_emoji_list).value_counts().plot(kind='barh', )
+            ax.bar_label(ax.containers[0]) # adds count number to each bar in the graphic
+            ax.xaxis.set_major_locator(MultipleLocator(1)) # sets min. spacing to one, as the count of an emoji is always an integer
+        else:
+            fig, ax = plt.subplots()
+            fig.text(0.1, 0.1, 'No emojis present', fontsize=50, color='gray', alpha=0.5,
+         rotation=45, ha='center', va='center', rotation_mode='anchor')
         ax.set_title( f"Emoji usage for thread {fullname}") 
-        ax.xaxis.set_major_locator(MultipleLocator(1)) # sets min. spacing to one, as the count of an emoji is always an integer
         plt.tight_layout()
         plt.savefig(f'data/{fullname}.png')
-        #plt.show()
+            #plt.show()
 
          
-    def flatten_emoji_list(self, emoji_list: list[list]):
+    def __flatten_emoji_list(self, emoji_list: list[list]):
         return [item for sub_list in emoji_list for item in sub_list]
 
-    def extract_emojis_from_posts(self, fullname):
+    def __extract_emojis_from_posts(self, fullname):
         """
         extracts emojis, adds them to a new column of the individual post csv file. \n
         :return: the list of emojis found
