@@ -4,6 +4,7 @@ import sys
 from matplotlib import pyplot as plt
 from matplotlib.ticker import MultipleLocator
 import pandas as pd
+from helper import Helper
 from master_file import MasterFile
 from para_paralanguage_classifier import para_output
 
@@ -32,9 +33,7 @@ class ParaAnalysis:
 
 
     def analyze_sentiment_in_post(self, fullname):
-        file_dir = os.path.dirname(os.path.abspath(__file__))
-        csv_folder = 'data'
-        folder_path = os.path.join(file_dir, csv_folder)
+        folder_path = Helper.get_folderpath()
         file_path_post_df = os.path.join(folder_path, f'{fullname}.csv')
         file_path_para_df = os.path.join(folder_path, f'{fullname}_para.csv')
         file_path_para_image = os.path.join(folder_path,f'{fullname}_para.png')

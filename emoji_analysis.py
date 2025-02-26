@@ -5,6 +5,7 @@ import matplotlib
 from matplotlib.ticker import MultipleLocator
 import pandas as pd
 import matplotlib.pyplot as plt
+from helper import Helper
 from master_file import MasterFile
 
 class EmojiAnalysis:
@@ -68,9 +69,7 @@ class EmojiAnalysis:
         :return: the list of emojis found
         """
         # TODO: remove coupling, only return list of emojios found
-        file_dir = os.path.dirname(os.path.abspath(__file__))
-        csv_folder = 'data'
-        folder_path = os.path.join(file_dir, csv_folder)
+        folder_path = Helper.get_folderpath()
         file_path = os.path.join(folder_path, f'{fullname}.csv')
 
         df = pd.read_csv(file_path)

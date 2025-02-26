@@ -8,6 +8,7 @@ from nltk.tokenize import WhitespaceTokenizer
 from nltk.corpus import stopwords
 import pandas as pd
 
+from helper import Helper
 from master_file import MasterFile
 
 
@@ -33,9 +34,7 @@ class VaderAnalysis:
 
 
     def analyze_sentiment_in_post(self, fullname):
-        file_dir = os.path.dirname(os.path.abspath(__file__))
-        csv_folder = 'data'
-        folder_path = os.path.join(file_dir, csv_folder)
+        folder_path = Helper.get_folderpath()
         file_path = os.path.join(folder_path, f'{fullname}.csv')
 
         df = pd.read_csv(file_path)

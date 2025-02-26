@@ -1,4 +1,5 @@
 import os
+from helper import Helper
 from master_file import MasterFile
 from emoji_analysis import EmojiAnalysis
 from post_extractor import PostExtractor
@@ -10,10 +11,8 @@ postsToExtract = [
     "https://www.reddit.com/r/Piracy/comments/1itb0il/ublock_was_turned_off_i_guess_its_time_to_move/",
     "https://www.reddit.com/r/chemistry/comments/1iwzs71/found_this_old_looking_bottle_of_picric_acid_at/"#random one
 ]
-# Get Path to data folder
-file_dir = os.path.dirname(os.path.abspath(__file__))
-csv_folder = 'data'
-folder_path = os.path.join(file_dir, csv_folder)
+
+folder_path = Helper.get_folderpath()
 
 
 # Extract posts
