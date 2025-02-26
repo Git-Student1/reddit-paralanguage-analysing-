@@ -1,6 +1,6 @@
 import os
 
-from comparison import MultiThreadOperations
+from multithread_operations import MultiThreadOperations
 from helper import Helper
 from master_file import MasterFile
 import pandas as pd

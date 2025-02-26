@@ -36,7 +36,7 @@ class EmojiAnalysis:
         master_df['postEmojis'] = master_df['postFullname'].apply(lambda full_name: emoji_dict[full_name])
         master_df.to_csv(self.master_file_path, index=False)
 
-    def __visualize_emoji_use(self, emojis:list[list], fullname:str):
+    def __visualize_emoji_use(self, emojis:list[list[str]], fullname:str):
         """
         create visualisation of the emoji usage
         """
@@ -46,7 +46,7 @@ class EmojiAnalysis:
 
         flattened_emoji_list = self.__flatten_emoji_list(emojis)
         if(len(flattened_emoji_list)!= 0 ):
-            flattened_emoji_list = [f"{emoji.demojize(the_emoji)} {the_emoji}" for the_emoji in flattened_emoji_list]
+            flattened_emoji_list = self.prossess_emojis_for_display(flattened_emoji_list)
             ax = pd.Series(flattened_emoji_list).value_counts().plot(kind='barh', )
             ax.bar_label(ax.containers[0]) # adds count number to each bar in the graphic
             ax.xaxis.set_major_locator(MultipleLocator(1)) # sets min. spacing to one, as the count of an emoji is always an integer
@@ -58,7 +58,8 @@ class EmojiAnalysis:
         plt.tight_layout()
         plt.savefig(f'data/{fullname}.png')
             #plt.show()
-
+    def prossess_emojis_for_display(self, emoji_list:list[str]):
+        return [f"{emoji.demojize(the_emoji)} {the_emoji}" for the_emoji in emoji_list]
          
     def __flatten_emoji_list(self, emoji_list: list[list]):
         return [item for sub_list in emoji_list for item in sub_list]
