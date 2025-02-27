@@ -1,9 +1,13 @@
 
 from ast import literal_eval
+from itertools import pairwise
 from matplotlib import pyplot as plt
+from matplotlib.container import BarContainer
+from matplotlib.text import Annotation
 import pandas as pd
 from emoji_analysis import EmojiAnalysis
 from master_file import MasterFile
+
 
 
 class MultiThreadOperations:
@@ -51,13 +55,37 @@ class MultiThreadOperations:
             df.rename({column.__str__(): str(df.loc[pfn, column])}, axis=1, inplace=True, errors='raise')
         df = df.drop(pfn)
         #print(result.to_string())
-        ax = df.plot.barh(figsize=(15,10))
-        ax.bar_label(ax.containers[0]) # type: ignore
-        ax.set_title(title)
-        plt.subplots_adjust(top=0.9, bottom=0.1, left=0.3, right=0.9)
+        ax = df.plot.barh(figsize=(15,13))
+        bar_contaioners:list[BarContainer] = []
+        bar_annotations:list[list[Annotation]] = []
+        
+        for container in ax.containers:
+            container:BarContainer
+            annotations = ax.bar_label(container=container, padding=5) 
+            bar_contaioners.append(container)
+            bar_annotations.append(annotations)
+
+        # fixing overlapping annotations
+        self.__fix_overlapping_annotations_for_boxplot(bar_contaioners, bar_annotations)
+
+        
+        plt.tight_layout()
+        #ax.set_title(title)
+        #plt.subplots_adjust(top=0.9, bottom=0.1, left=0.3, right=0.9)
         #TODO: make sure that there are not multiple images of the same analysis with only different order of post names!
         plt.savefig(f'data/{title}.png')
         plt.show()
+    
+    def __fix_overlapping_annotations_for_boxplot(self, bar_contaioners:list[BarContainer], bar_annotations:list[list[Annotation]]):
+        # inspired by https://www.dontusethiscode.com/blog/2023-06-14_stacked_barlabels.html, adapted and simplified
+        for (bar_annotations_upper, bar_annotations_lower) in pairwise(bar_annotations):
+            for (annotation_upper, annotation_lower)  in zip(bar_annotations_upper, bar_annotations_lower):
+                # if the stacked text overlap, bottom align the top label and reset the
+                #   xytext value (accessed via xyann)
+                if annotation_upper.get_window_extent().overlaps(annotation_lower.get_window_extent()):
+                    annotation_lower.set_ha('left')
+                    annotation_lower.xyann = (0, 0)
+
 
     def __get_df_emojis_count(self, post_group:list[str]):
         # only the para language values

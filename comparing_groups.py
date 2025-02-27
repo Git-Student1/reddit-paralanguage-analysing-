@@ -13,7 +13,7 @@ post_group1 = [
 ]
 
 post_group2 =[
-#"t3_1itb0il"
+"t3_1itb0il"
 ]
 #TODO: remove code dublication with main.py
 
