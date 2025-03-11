@@ -39,10 +39,10 @@ class ComparisonJsonReader:
              for s_folder in os.scandir(folder_path) if s_folder.is_dir()
              for file in os.scandir(os.path.join(folder_path, s_folder)) if  file.is_file() and file.name.endswith(ComparisonJsonReader.get_comparison_file_name())
              ]
-        print(subfolder_names)
-        input_result = input("which comparson should be made? \n" + 
+        """input_result = input("which comparson should be made? \n" + 
                             "0: all \n" +
-                            "\n".join([f"{int(i)+1}: {val}" for i, val in enumerate(subfolder_names)]) +"\n")
+                            "\n".join([f"{int(i)+1}: {val}" for i, val in enumerate(subfolder_names)]) +"\n")"""
+        input_result = "0"
         try :
             if (int(input_result)< 0 or int(input_result)> len(subfolder_names)):
                 raise ValueError(f"Value not in range. Given: {input_result}")
