@@ -41,6 +41,10 @@ class MasterFile:
     para_emoji_count = "emoji_count"
     para_emoji_index = "emoji_index"
     para_emoticon_index = "emoticon_index"
+
+    summary_columns = [
+        para_vq_overall, para_vs_overall, para_tk_overall, para_vk_overall, para_art_overall, para_emoji_index, para_emoticon_index 
+    ]
     
     para_all_columns = [para_vq_pitch, para_vq_rhythm, para_vq_stress, para_vq_emphasis, para_vq_tempo, para_vq_volume, para_vq_censorship, para_vq_spelling, para_vq_overall, 
                     para_vs_alternants, para_vs_differentiators, para_vs_overall,

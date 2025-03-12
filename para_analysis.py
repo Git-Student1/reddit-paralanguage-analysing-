@@ -37,6 +37,10 @@ class ParaAnalysis:
         file_path_post_df = os.path.join(folder_path, f'{fullname}.csv')
         file_path_para_df = os.path.join(folder_path, f'{fullname}_para.csv')
         file_path_para_image = os.path.join(folder_path,f'{fullname}_para.png')
+        para_image_title = f"Paralanguage usage for thread {fullname}"
+        file_path_para_sumary_image = os.path.join(folder_path,f'{fullname}_para_sumary.png')
+        para_image_summary_title = f"Paralanguage usage summary for thread {fullname}"
+
 
         if os.path.exists(file_path_para_df) and self.masterfile.contains_all_para_values(fullname=fullname):
             print(f"para analysis already exists for file {fullname}. Skipping")
@@ -73,7 +77,7 @@ class ParaAnalysis:
 
         # create summary of total paralanguage use
         df_para_analysis_compressed =  df_para_analysis.drop(["commentContent"], axis=1,).agg(['sum'])
-        print(df_para_analysis_compressed.columns.tolist())
+
         
         # add summary to masterfile
         for column in df_para_analysis_compressed.columns.tolist():
@@ -81,13 +85,15 @@ class ParaAnalysis:
             self.master_df.loc[self.master_df[self.masterfile.post_full_name_cn] == fullname, column] =  value
         self.masterfile.update_master_file()
         
-        # Create graphic for summary for paralanguage use analysis
-        ax = df_para_analysis_compressed.T.plot.barh()
-        ax.bar_label(ax.containers[0]) # adds count number to each bar in the graphic
-        ax.yaxis.set_major_locator(MultipleLocator(1)) # sets min. spacing to one, as the count of a paralanguage occuring is always an integer
-        ax.set_title( f"Paralanguage usage for thread {fullname}")
-        plt.tight_layout()
-        plt.savefig(file_path_para_image)
+
+
+
+        df_para_analysis_summary_compressed = df_para_analysis_compressed[MasterFile.summary_columns]
+        
+        Helper.plot_and_save(series_or_df=df_para_analysis_compressed.T, title=para_image_title, file_path=file_path_para_image)
+        Helper.plot_and_save(series_or_df=df_para_analysis_summary_compressed.T, title=para_image_summary_title, file_path=file_path_para_sumary_image)
+
+       
 
         df_para_analysis.to_csv(file_path_para_df, index=False)
 

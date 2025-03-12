@@ -38,19 +38,7 @@ class EmojiAnalysis:
         master_df.to_csv(self.master_file_path, index=False)
 
 
-    def __postproccess_and_save_ax(self, ax:matplotlib.axes.Axes, title: str, file_path: str):
-        ax.set_title(title) 
-        plt.tight_layout()
-        plt.savefig(file_path)
-    
-    def __create_ax_for_series(self, series:pd.Series):
-            ax = series.plot(kind='barh',)
-            ax.bar_label(ax.containers[0]) # type: ignore # adds count number to each bar in the graphic
-            ax.xaxis.set_major_locator(MultipleLocator(1)) # sets min. spacing to one, as the count of an emoji is always an integer
-            return ax
-    def __plot_series_and_save(self, series:pd.Series, title: str, file_path: str):
-        ax = self.__create_ax_for_series(series=series)
-        self.__postproccess_and_save_ax(ax=ax, title=title, file_path=file_path)
+
 
 
     def __visualize_emoji_use(self, emojis:list[list[str]], fullname:str):
@@ -70,15 +58,15 @@ class EmojiAnalysis:
         if(len(flattened_emoji_list)!= 0 ):
             flattened_emoji_list = self.prossess_emojis_for_display(flattened_emoji_list)
             all = pd.Series(flattened_emoji_list).value_counts()
-            self.__plot_series_and_save(series=all, title=title, file_path=file_path_all)
+            Helper.plot_and_save(series_or_df=all, title=title, file_path=file_path_all)
             if all.count()>20:
                 most_common_only = self.get_df_with_n_highest_values(pd.Series(flattened_emoji_list).value_counts(), n)
-                self.__plot_series_and_save(series=most_common_only, title=title_most_common, file_path=file_path_most_common)
+                Helper.plot_and_save(series_or_df=most_common_only, title=title_most_common, file_path=file_path_most_common)
         else:
             fig, ax = plt.subplots()
             fig.text(0.1, 0.1, 'No emojis present', fontsize=50, color='gray', alpha=0.5,
         rotation=45, ha='center', va='center', rotation_mode='anchor')
-            self.__postproccess_and_save_ax(ax=ax, title=title, file_path=file_path_all )
+            Helper.postproccess_and_save_ax(ax=ax, title=title, file_path=file_path_all )
             #plt.show()
     
     def prossess_emojis_for_display(self, emoji_list:list[str]):
