@@ -16,7 +16,7 @@ folder_path = Helper.get_files_base_folderpath()
 
 
 # Extract posts
-post_extractor = PostExtractor(folder_path=folder_path)
+post_extractor = PostExtractor()
 masterFile = MasterFile(folder_path)
 post_extractor.extract_posts(post_urls=postsToExtract, masterfile=masterFile)
 

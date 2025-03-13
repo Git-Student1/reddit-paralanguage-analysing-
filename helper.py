@@ -89,7 +89,7 @@ class Helper:
             """
             file_path: WITHOUT png ending
             """
-            print(relative_comment_divisor)
+
             cls.plot_and_save(series_or_df=series_or_df, title=title, file_path=file_path, bigger_plot=bigger_plot)
 
             if(relative_comment_divisor2==0) or type(series_or_df)==pd.Series:

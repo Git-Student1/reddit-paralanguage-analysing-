@@ -11,7 +11,7 @@ from master_file import MasterFile
 load_dotenv()  
 
 class PostExtractor:
-    def __init__(self, folder_path):
+    def __init__(self):
         # Initialize PRAW with your credentials
         self.reddit = praw.Reddit(
         client_id= os.getenv("CLIENT_ID"), 
@@ -49,6 +49,12 @@ class PostExtractor:
         if not self.__post_already_extracted(post):
             post.comments.replace_more(limit=None)  # This ensures you load all comments, including 'MoreComments' objects
         return post
+    
+    def get_post_fullnames_from_url(self, urls:list[str]):
+        postnames = []
+        for url in urls:
+            postnames.append(self.reddit.submission(url=url).fullname)
+        return postnames
     
     def __post_already_extracted(self, post: praw.reddit.Submission):
         return f'{post.fullname}.csv' in os.listdir(Helper.get_folder_path_for_thread_files(post.fullname))
@@ -141,7 +147,8 @@ class PostExtractor:
                            masterfile.postEmojis_cn: "[]",
                            masterfile.sentimentScore_cn:"",
                            masterfile.number_of_comments: len(post.comments.list()),
-                           masterfile.number_of_symbols: post_comments_count}
+                           masterfile.number_of_symbols: post_comments_count
+                           }
                 if post.fullname in masterfile.df[masterfile.post_full_name_cn].values:
                     print(len(list(new_row.keys())))
                     print(len(list(new_row.values())))

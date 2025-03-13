@@ -87,11 +87,7 @@ class ParaAnalysis:
         # create summary of total paralanguage use
 
         df_para_analysis = pd.read_csv(csv_path)
-
-
         df_para_analysis_compressed =  df_para_analysis.drop(["commentContent"], axis=1,).agg(['sum'])
-
-        print(df_para_analysis_compressed)
         
         # add summary to masterfile
         for column in df_para_analysis_compressed.columns.tolist():

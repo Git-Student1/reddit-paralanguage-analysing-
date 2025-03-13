@@ -15,7 +15,7 @@ class MultiThreadOperations:
     def __init__(self, masterfile:MasterFile) -> None:
         self.masterfile = masterfile
         self.emoji_analysis = EmojiAnalysis(master_file=masterfile)
-        self.summary_columns = MasterFile.summary_columns
+        self.summary_columns = MasterFile.summary_columns.copy()
         self.summary_columns.append(self.masterfile.post_full_name_cn)
         
 
@@ -93,6 +93,7 @@ class MultiThreadOperations:
         return df
 
     def __create_plot_for_df(self, df:pd.DataFrame, title:str, save_folder:str, file_name:str, group1:list[str], group2:list[str]=[], bigger_plot:bool=False):
+        print(f"start new comparison plot creation: {title}")
         file_path = f"{save_folder}/{file_name}"
         number_of_comments = self.masterfile.get_number_of_comments_for_group(post_fullnames=group1)
         number_of_symbols = self.masterfile.get_number_of_symbols_for_group(post_fullnames=group1)
@@ -120,7 +121,7 @@ class MultiThreadOperations:
         # only the values from the group 
         df = df[df[self.masterfile.post_full_name_cn].notna() & df[self.masterfile.post_full_name_cn].isin( post_group)]
         df[self.masterfile.postEmojis_cn].tolist()
-        df[self.masterfile.postEmojis_cn] = df[self.masterfile.postEmojis_cn].apply(literal_eval)
+        #df[self.masterfile.postEmojis_cn] = df[self.masterfile.postEmojis_cn].apply(literal_eval)
         flattened_list = [item for sublist in df[self.masterfile.postEmojis_cn] for item in sublist]
         flattened_list = self.emoji_analysis.prossess_emojis_for_display(flattened_list)
         #let the df have the same structure as df in para analysis for easy processing
