@@ -81,7 +81,7 @@ class EmojiAnalysis:
         :return: the list of emojis found
         """
         # TODO: remove coupling, only return list of emojios found
-        folder_path = Helper.get_folderpath()
+        folder_path = Helper.get_files_base_folderpath()
         file_path = os.path.join(folder_path, f'{fullname}.csv')
 
         df = pd.read_csv(file_path)

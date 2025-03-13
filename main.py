@@ -12,7 +12,7 @@ postsToExtract = [
     "https://www.reddit.com/r/chemistry/comments/1iwzs71/found_this_old_looking_bottle_of_picric_acid_at/"#random one
 ]
 
-folder_path = Helper.get_folderpath()
+folder_path = Helper.get_files_base_folderpath()
 
 
 # Extract posts

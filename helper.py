@@ -9,7 +9,7 @@ import pandas as pd
 
 class Helper:
     @classmethod
-    def get_folderpath(cls):
+    def get_files_base_folderpath(cls):
         file_dir = os.path.dirname(os.path.abspath(__file__))
         csv_folder = 'data'
         folder_path = os.path.join(file_dir, csv_folder)
@@ -31,6 +31,15 @@ class Helper:
             ax.xaxis.set_major_locator(MultipleLocator(max/10)) # sets min. spacing to one, as the count of an emoji is always an integer
             return ax
     @classmethod
-    def plot_and_save(self, series_or_df:pd.Series|pd.DataFrame, title: str, file_path: str):
-        ax = self.create_ax(series_or_df=series_or_df)
-        self.postproccess_and_save_ax(ax=ax, title=title, file_path=file_path)
+    def plot_and_save(cls, series_or_df:pd.Series|pd.DataFrame, title: str, file_path: str):
+        ax = cls.create_ax(series_or_df=series_or_df)
+        cls.postproccess_and_save_ax(ax=ax, title=title, file_path=file_path)
+    
+    @classmethod
+    def get_file_path_for_thread_file(cls, post_fullname):
+        file_path = os.path.join(cls.get_files_base_folderpath(), f'{post_fullname}.csv')
+        return file_path
+    @classmethod
+    def get_folder_path_for_thread_files(cls):
+        folder_path =cls.get_files_base_folderpath()
+        return folder_path

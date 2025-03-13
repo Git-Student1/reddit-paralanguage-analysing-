@@ -12,7 +12,7 @@ print(f"WARNING: If one group has a 0 for every para language aspect check if th
 #TODO: remove code dublication with main.py
 
 
-folder_path = Helper.get_folderpath()
+folder_path = Helper.get_files_base_folderpath()
 #get subfolders with comparison data
 subfolder_names = ComparisonJsonReader.get_relevant_subfolders_for_comparison(folder_path=folder_path)
 for subfolder in subfolder_names:

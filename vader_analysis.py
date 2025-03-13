@@ -34,7 +34,7 @@ class VaderAnalysis:
 
 
     def analyze_sentiment_in_post(self, fullname):
-        folder_path = Helper.get_folderpath()
+        folder_path = Helper.get_files_base_folderpath()
         file_path = os.path.join(folder_path, f'{fullname}.csv')
 
         df = pd.read_csv(file_path)

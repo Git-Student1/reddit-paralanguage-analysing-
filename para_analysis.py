@@ -33,7 +33,7 @@ class ParaAnalysis:
 
 
     def analyze_sentiment_in_post(self, fullname):
-        folder_path = Helper.get_folderpath()
+        folder_path = Helper.get_files_base_folderpath()
         file_path_post_df = os.path.join(folder_path, f'{fullname}.csv')
         file_path_para_df = os.path.join(folder_path, f'{fullname}_para.csv')
         file_path_para_image = os.path.join(folder_path,f'{fullname}_para.png')
