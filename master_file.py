@@ -1,5 +1,6 @@
 from ast import literal_eval
 import enum
+import math
 import os
 import pandas as pd
 import praw
@@ -93,9 +94,24 @@ class MasterFile:
             # in case there are no para columns
             return False
 
+    def get_number_of_comments_for_thread(self, post_fullname:str):
+        sub_df = self.df[self.df[self.post_full_name_cn] == post_fullname]
+        value = float(sub_df.iloc[0][self.number_of_comments])
+        if(math.isnan(value)):
+            raise ValueError(f"masterfile has no attribute {self.number_of_comments} for post {post_fullname}")
+        return value
+    
+    def get_number_of_symbols_for_thread(self, post_fullname:str):
+        sub_df = self.df[self.df[self.post_full_name_cn] == post_fullname]
+        value = float(sub_df.iloc[0][self.number_of_symbols])
+        if(math.isnan(value)):
+            raise ValueError(f"masterfile has no attribute {self.number_of_symbols} for post {post_fullname}")
+        return value
+
     
     def getColumnAsList(self, columnName):
         return self.df[columnName].to_list()
+    
 
            
 

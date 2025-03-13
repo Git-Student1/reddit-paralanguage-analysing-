@@ -12,6 +12,7 @@ from master_file import MasterFile
 class EmojiAnalysis:
     #TODO: remove tight coupling with masterfile
     def __init__(self, master_file:MasterFile):
+        self.master_file = master_file
         self.master_df: pd.DataFrame = master_file.df
         self.master_file_path = master_file.master_file_path
         # change front to a font that can display emojis
@@ -52,16 +53,19 @@ class EmojiAnalysis:
         n = 20
         title = f"Emoji usage for thread {fullname}"
         title_most_common = f"Emoji usage for thread {fullname} - {n} most common"
-        file_path_all = f'data/{fullname}.png' 
-        file_path_most_common = f'data/{fullname}-most-common.png' 
+        image_folder_path = Helper.get_folder_path_for_thread_image_files(post_fullname=fullname)
+        file_path_all = os.path.join(image_folder_path, fullname)
+        file_path_most_common = os.path.join(image_folder_path, f'{fullname}_most_common')
         
         if(len(flattened_emoji_list)!= 0 ):
             flattened_emoji_list = self.prossess_emojis_for_display(flattened_emoji_list)
             all = pd.Series(flattened_emoji_list).value_counts()
-            Helper.plot_and_save(series_or_df=all, title=title, file_path=file_path_all)
+            number_of_comments = self.master_file.get_number_of_comments_for_thread(post_fullname=fullname)
+            number_of_symbols = self.master_file.get_number_of_symbols_for_thread(post_fullname=fullname)
+            Helper.plot_and_save_including_relative(series_or_df=all, title=title, file_path=file_path_all, relative_comment_divisor=number_of_comments, relative_symbol_divisor=number_of_symbols)
             if all.count()>20:
                 most_common_only = self.get_df_with_n_highest_values(pd.Series(flattened_emoji_list).value_counts(), n)
-                Helper.plot_and_save(series_or_df=most_common_only, title=title_most_common, file_path=file_path_most_common)
+                Helper.plot_and_save_including_relative(series_or_df=most_common_only, title=title_most_common, file_path=file_path_most_common, relative_comment_divisor=number_of_comments, relative_symbol_divisor=number_of_symbols)
         else:
             fig, ax = plt.subplots()
             fig.text(0.1, 0.1, 'No emojis present', fontsize=50, color='gray', alpha=0.5,
@@ -81,7 +85,7 @@ class EmojiAnalysis:
         :return: the list of emojis found
         """
         # TODO: remove coupling, only return list of emojios found
-        folder_path = Helper.get_files_base_folderpath()
+        folder_path = Helper.get_folder_path_for_thread_files(post_fullname=fullname)
         file_path = os.path.join(folder_path, f'{fullname}.csv')
 
         df = pd.read_csv(file_path)

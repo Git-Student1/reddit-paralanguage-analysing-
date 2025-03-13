@@ -33,12 +33,13 @@ class ParaAnalysis:
 
 
     def analyze_sentiment_in_post(self, fullname):
-        folder_path = Helper.get_files_base_folderpath()
-        file_path_post_df = os.path.join(folder_path, f'{fullname}.csv')
+        folder_path = Helper.get_folder_path_for_thread_files(post_fullname=fullname)
+        image_folder_path = Helper.get_folder_path_for_thread_image_files(post_fullname=fullname)
+        file_path_post_df = os.path.join(image_folder_path, f'{fullname}.csv')
         file_path_para_df = os.path.join(folder_path, f'{fullname}_para.csv')
-        file_path_para_image = os.path.join(folder_path,f'{fullname}_para.png')
+        file_path_para_image = os.path.join(image_folder_path,f'{fullname}_para')
         para_image_title = f"Paralanguage usage for thread {fullname}"
-        file_path_para_sumary_image = os.path.join(folder_path,f'{fullname}_para_sumary.png')
+        file_path_para_sumary_image = os.path.join(folder_path,f'{fullname}_para_sumary')
         para_image_summary_title = f"Paralanguage usage summary for thread {fullname}"
 
 
@@ -49,13 +50,15 @@ class ParaAnalysis:
         post_df = pd.read_csv(file_path_post_df)
 
         # ask for fast or slow analysis
+        """
         fast_analysis_text = input("Fast para analysis(J/N)")
         if fast_analysis_text.lower() == "j": fast_analysis = True
         elif fast_analysis_text.lower() == "n": fast_analysis= False
         else:
             print("Proceeding without fast analysis")
             fast_analysis= False
-        
+        """
+        fast_analysis= True
         # do the fast or slow analysis 
         if not fast_analysis:
             total_comments = len(post_df["commentContent"])
@@ -89,9 +92,20 @@ class ParaAnalysis:
 
 
         df_para_analysis_summary_compressed = df_para_analysis_compressed[MasterFile.summary_columns]
-        
-        Helper.plot_and_save(series_or_df=df_para_analysis_compressed.T, title=para_image_title, file_path=file_path_para_image)
-        Helper.plot_and_save(series_or_df=df_para_analysis_summary_compressed.T, title=para_image_summary_title, file_path=file_path_para_sumary_image)
+        number_of_comments = self.masterfile.get_number_of_comments_for_thread(post_fullname=fullname)
+        number_of_symbols = self.masterfile.get_number_of_symbols_for_thread(post_fullname=fullname)
+        Helper.plot_and_save_including_relative(
+            series_or_df= df_para_analysis_compressed.T, 
+            title= para_image_title, 
+            file_path= file_path_para_image, 
+            relative_comment_divisor= number_of_comments, 
+            relative_symbol_divisor= number_of_symbols)
+        Helper.plot_and_save_including_relative(
+            series_or_df = df_para_analysis_summary_compressed.T, 
+            title = para_image_summary_title, 
+            file_path = file_path_para_sumary_image, 
+            relative_comment_divisor = number_of_comments, 
+            relative_symbol_divisor = number_of_symbols)
 
        
 

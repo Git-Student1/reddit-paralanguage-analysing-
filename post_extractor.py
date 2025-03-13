@@ -51,7 +51,7 @@ class PostExtractor:
         return post
     
     def __post_already_extracted(self, post: praw.reddit.Submission):
-        return f'{post.fullname}.csv' in os.listdir(Helper.get_folder_path_for_thread_files())
+        return f'{post.fullname}.csv' in os.listdir(Helper.get_folder_path_for_thread_files(post.fullname))
 
     
     def __write_thread_file(self, post: praw.reddit.Submission):
