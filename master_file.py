@@ -1,3 +1,4 @@
+from ast import literal_eval
 import enum
 import os
 import pandas as pd
@@ -56,6 +57,7 @@ class MasterFile:
                     para_a_nonbodily_emoticons, para_a_nonbodily_emojis, para_a_formatting, para_art_overall, 
                     para_emoji_count, para_emoji_index, para_emoticon_index
                     ]
+    
 
     def __init__(self, folder_path):
         self.master_file_path = os.path.join(folder_path, '_master.csv')
@@ -65,8 +67,13 @@ class MasterFile:
         self.postEmojis_cn = "postEmojis"
         self.sentimentScore_cn = "sentimentScore"
 
+        #list_elements = [self.postEmojis_cn]
+
         if os.path.exists(self.master_file_path):
             self.df = pd.read_csv(self.master_file_path, na_values=['', 'NA', 'NaN'])
+            #for column in list_elements:
+            #    self.df[column] = self.df[column].apply(lambda row_value: (literal_eval(row_value), print(literal_eval(row_value))))
+
         else:
             self.df = pd.DataFrame(columns = [self.post_full_name_cn, self.dateRetrieved_cn, self.postTitle_cn,self.postEmojis_cn, self.sentimentScore_cn ])
             # TODO: remove print statement

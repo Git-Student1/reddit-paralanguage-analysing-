@@ -17,7 +17,6 @@ class PostExtractor:
         client_id= os.getenv("CLIENT_ID"), 
         client_secret=os.getenv("CLIENT_SECRET"), 
         user_agent=os.getenv("USER_AGENT"))
-        self.__folder_path = folder_path
         self.post_symbols_counts = {}
         self.posts_newly_downladed = []
 
@@ -132,17 +131,23 @@ class PostExtractor:
                     post_comments_count = self.post_symbols_counts[post.fullname]
                 except KeyError:
                     post_comments_count = len("".join(pd.read_csv(Helper.get_file_path_for_thread_file(post_fullname=post.fullname))["commentContent"]))
+                list_with_existing_row =  masterfile.df.loc[masterfile.df[masterfile.post_full_name_cn] == post.fullname]
+                
 
 
                 new_row = {masterfile.post_full_name_cn: post.fullname,
                            masterfile.dateRetrieved_cn: datetime.today().strftime('%d-%m-%Y %H:%M:%S'),
                            masterfile.postTitle_cn : post.title,
-                           masterfile.postEmojis_cn: [],
+                           masterfile.postEmojis_cn: "[]",
                            masterfile.sentimentScore_cn:"",
                            masterfile.number_of_comments: len(post.comments.list()),
                            masterfile.number_of_symbols: post_comments_count}
-                
-                new_row_df = pd.DataFrame([new_row])
-                masterfile.df = pd.concat([masterfile.df, new_row_df], ignore_index=True)
+                if post.fullname in masterfile.df[masterfile.post_full_name_cn].values:
+                    print(len(list(new_row.keys())))
+                    print(len(list(new_row.values())))
+                    masterfile.df.loc[masterfile.df[masterfile.post_full_name_cn] == post.fullname, list(new_row.keys())] = list(new_row.values())
+                else:
+                    new_row_df = pd.DataFrame([new_row])
+                    masterfile.df = pd.concat([masterfile.df, new_row_df], ignore_index=True)
         masterfile.update_master_file()
     
