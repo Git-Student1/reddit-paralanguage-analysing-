@@ -26,21 +26,18 @@ class ParaAnalysis:
 
         for full_name in post_fullnames:
             print(f"Analyzing: {full_name}")
-            self.analyze_sentiment_in_post(full_name)
+            self.__analyze_sentiment_in_post(full_name)
+            self.__create_para_plots(fullname=full_name)
             #print("Done!\n\n")
         
         #master_df.to_csv(self.master_file_path, index=False)
 
 
-    def analyze_sentiment_in_post(self, fullname):
+    def __analyze_sentiment_in_post(self, fullname):
         folder_path = Helper.get_folder_path_for_thread_files(post_fullname=fullname)
-        image_folder_path = Helper.get_folder_path_for_thread_image_files(post_fullname=fullname)
-        file_path_post_df = os.path.join(image_folder_path, f'{fullname}.csv')
+        file_path_post_df = os.path.join(folder_path, f'{fullname}.csv')
         file_path_para_df = os.path.join(folder_path, f'{fullname}_para.csv')
-        file_path_para_image = os.path.join(image_folder_path,f'{fullname}_para')
-        para_image_title = f"Paralanguage usage for thread {fullname}"
-        file_path_para_sumary_image = os.path.join(folder_path,f'{fullname}_para_sumary')
-        para_image_summary_title = f"Paralanguage usage summary for thread {fullname}"
+
 
 
         if os.path.exists(file_path_para_df) and self.masterfile.contains_all_para_values(fullname=fullname):
@@ -77,10 +74,24 @@ class ParaAnalysis:
 
         # Convert the list of dictionaries to a DataFrame
         df_para_analysis = pd.DataFrame(output)
+        df_para_analysis.to_csv(file_path_para_df, index=False)
 
+    
+    def __create_para_plots(self, fullname:str):
+        csv_path = f"{Helper.get_folder_path_for_thread_files(post_fullname=fullname)}/{fullname}_para.csv"
+        image_folder_path = Helper.get_folder_path_for_thread_image_files(post_fullname=fullname)
+        file_path_para_image = os.path.join(image_folder_path,f'{fullname}_para')
+        para_image_title = f"Paralanguage usage for thread {fullname}"
+        file_path_para_sumary_image = os.path.join(image_folder_path,f'{fullname}_para_sumary')
+        para_image_summary_title = f"Paralanguage usage summary for thread {fullname}"
         # create summary of total paralanguage use
+
+        df_para_analysis = pd.read_csv(csv_path)
+
+
         df_para_analysis_compressed =  df_para_analysis.drop(["commentContent"], axis=1,).agg(['sum'])
 
+        print(df_para_analysis_compressed)
         
         # add summary to masterfile
         for column in df_para_analysis_compressed.columns.tolist():
@@ -109,7 +120,7 @@ class ParaAnalysis:
 
        
 
-        df_para_analysis.to_csv(file_path_para_df, index=False)
+        
 
     
     def para(self, input_text):

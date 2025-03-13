@@ -107,6 +107,7 @@ class EmojiAnalysis:
             df_with_10_most_common_each = pd.concat([df_with_10_most_common_each,df.nlargest(n, columns=[column])], axis=0)
         df_with_10_most_common_each = df_with_10_most_common_each.drop_duplicates()
         return df_with_10_most_common_each
+    
     def get_df_with_n_highest_values(self, series:pd.Series, n:int):
         return series.nlargest(n)
 
